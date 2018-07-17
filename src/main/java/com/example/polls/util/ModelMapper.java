@@ -27,7 +27,7 @@ public class ModelMapper {
             choiceResponse.setId(choice.getId());
             choiceResponse.setText(choice.getText());
 
-            if(choiceVotesMap.containsKey(choice.getId())) {
+            if (choiceVotesMap.containsKey(choice.getId())) {
                 choiceResponse.setVoteCount(choiceVotesMap.get(choice.getId()));
             } else {
                 choiceResponse.setVoteCount(0);
@@ -39,7 +39,7 @@ public class ModelMapper {
         UserSummary creatorSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName());
         pollResponse.setCreatedBy(creatorSummary);
 
-        if(userVote != null) {
+        if (userVote != null) {
             pollResponse.setSelectedChoice(userVote);
         }
 

@@ -1,10 +1,7 @@
 package com.example.polls.controller;
 
-import com.example.polls.model.*;
+import com.example.polls.model.Poll;
 import com.example.polls.payload.*;
-import com.example.polls.repository.PollRepository;
-import com.example.polls.repository.UserRepository;
-import com.example.polls.repository.VoteRepository;
 import com.example.polls.security.CurrentUser;
 import com.example.polls.security.UserPrincipal;
 import com.example.polls.service.PollService;
@@ -16,28 +13,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import javax.validation.Valid;
 import java.net.URI;
-
-/**
- * Created by rajeevkumarsingh on 20/11/17.
- */
 
 @RestController
 @RequestMapping("/api/polls")
 public class PollController {
 
-    @Autowired
-    private PollRepository pollRepository;
-
-    @Autowired
-    private VoteRepository voteRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private PollService pollService;
+
+    @Autowired
+    public PollController( final PollService pollService) {
+        this.pollService = pollService;
+    }
 
     private static final Logger logger = LoggerFactory.getLogger(PollController.class);
 

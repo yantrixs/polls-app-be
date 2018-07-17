@@ -6,9 +6,9 @@ import com.example.polls.payload.*;
 import com.example.polls.repository.PollRepository;
 import com.example.polls.repository.UserRepository;
 import com.example.polls.repository.VoteRepository;
+import com.example.polls.security.CurrentUser;
 import com.example.polls.security.UserPrincipal;
 import com.example.polls.service.PollService;
-import com.example.polls.security.CurrentUser;
 import com.example.polls.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,26 +19,26 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 public class UserController {
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private PollRepository pollRepository;
-
-    @Autowired
     private VoteRepository voteRepository;
+    private PollService pollService;
 
     @Autowired
-    private PollService pollService;
+    public UserController(final UserRepository userRepository, final PollRepository pollRepository,
+                          final VoteRepository voteRepository, final PollService pollService) {
+        this.pollRepository = pollRepository;
+        this.pollService = pollService;
+        this.userRepository = userRepository;
+        this.voteRepository = voteRepository;
+    }
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
     public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
-        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
-        return userSummary;
+        return new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
     }
 
     @GetMapping("/user/checkUsernameAvailability")
@@ -61,9 +61,7 @@ public class UserController {
         long pollCount = pollRepository.countByCreatedBy(user.getId());
         long voteCount = voteRepository.countByUserId(user.getId());
 
-        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt(), pollCount, voteCount);
-
-        return userProfile;
+        return new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt(), pollCount, voteCount);
     }
 
     @GetMapping("/users/{username}/polls")
